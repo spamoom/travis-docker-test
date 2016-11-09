@@ -1,0 +1,80 @@
+site_data:
+  image: netsells/data:latest
+  volumes:
+    - .:/data
+mysql:
+  image: netsells/mysql:latest
+  volumes_from:
+    - site_data
+  environment:
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_DATABASE=site
+    - MYSQL_USER=user
+    - MYSQL_PASSWORD=password
+fpm:
+  image: netsells/fpm:latest
+  volumes_from:
+    - site_data
+  links:
+    - mysql
+    - search
+    - mailcatcher
+    - redis
+nginx:
+  image: netsells/nginx:latest
+  volumes_from:
+    - site_data
+  links:
+    - fpm
+search:
+  image: elasticsearch:latest
+redis:
+  image: redis:latest
+artisan:
+  image: netsells/artisan:latest
+  volumes_from:
+    - site_data
+  links:
+    - mysql
+    - search
+    - mailcatcher
+composer:
+  image: netsells/composer:latest
+  working_dir: /data
+  volumes_from:
+    - site_data
+  volumes:
+    - ~/.ssh:/root/.ssh
+    - ~/.composer/auth.json:/root/composer/auth.json
+  links:
+    - mysql
+phpunit:
+  image: netsells/phpunit:latest
+  volumes_from:
+    - site_data
+  links:
+    - mysql
+    - mailcatcher
+mailcatcher:
+  image: schickling/mailcatcher:latest
+npm:
+  image: netsells/node:latest
+  entrypoint: npm
+  volumes_from:
+    - site_data
+  working_dir: /data
+  command: --version
+bower:
+  image: netsells/node:latest
+  entrypoint: bower
+  volumes_from:
+    - site_data
+  working_dir: /data
+  command: --version
+gulp:
+  image: netsells/node:latest
+  entrypoint: gulp
+  volumes_from:
+    - site_data
+  working_dir: /data
+  command: --version

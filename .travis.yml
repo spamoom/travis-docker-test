@@ -1,0 +1,5 @@
+sudo: required
+services:
+  - docker
+
+# docker-compose -f docker-compose-testing.yml pull
