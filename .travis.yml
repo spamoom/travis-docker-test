@@ -1,5 +1,9 @@
 sudo: required
+
+language: php
+
 services:
   - docker
 
-# docker-compose -f docker-compose-testing.yml pull
+before_install:
+  - docker-compose -f docker-compose-testing.yml pull
