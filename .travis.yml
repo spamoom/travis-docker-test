@@ -21,7 +21,6 @@ before_script:
   - sleep 10
   - docker-compose -f docker-compose-testing.yml run --rm composer install --prefer-dist --no-interaction --ignore-platform-reqs
   - docker-compose -f docker-compose-testing.yml run --rm artisan migrate --seed
-  - docker-compose -f docker-compose-testing.yml run --rm artisan hatchly:build-pages
 
 script:
   - docker-compose -f docker-compose-testing.yml run --rm phpunit -c phpunit.xml --log-junit test-reports/phpunit.xml
