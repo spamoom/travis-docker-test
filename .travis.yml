@@ -1,26 +1,6 @@
 sudo: required
 
-services:
-  - docker
-
-before_install:
-  - docker-compose -f docker-compose-testing.yml pull
+language: php
 
 before_script:
-  - docker-compose -f docker-compose-testing.yml up -d
-  - cp /dev/null .env
-  - echo "APP_KEY=3PSIm0Vfr3iihyxgLNIbjBavCHngFGsC" >> .env
-  - echo "APP_ENV=test" >> .env
-  - echo "APP_DEBUG=true" >> .env
-  - echo "DB_USERNAME=user" >> .env
-  - echo "DB_PASSWORD=password" >> .env
-  - echo "DB_DATABASE=site" >> .env
-  - echo "DB_PORT=3306" >> .env
-  - echo "DB_HOST=mysql" >> .env
-  - echo "FILESYSTEM=local" >> .env
-  - sleep 10
-  - docker-compose -f docker-compose-testing.yml run --rm composer install --prefer-dist --no-interaction --ignore-platform-reqs
-  - docker-compose -f docker-compose-testing.yml run --rm artisan migrate --seed
-
-script:
-  - docker-compose -f docker-compose-testing.yml run --rm phpunit -c phpunit.xml --log-junit test-reports/phpunit.xml
+  - composer install
